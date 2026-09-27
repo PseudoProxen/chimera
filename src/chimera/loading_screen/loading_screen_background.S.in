@@ -1,0 +1,14 @@
+;# SPDX-License-Identifier: GPL-3.0-only
+
+;# This is a template that CMake turns into loading_screen_background.S. It embeds the loading screen background PNG
+;# directly into the binary. It is a 3840x2160 image, so this is a lot cheaper than making it a C array.
+
+.section .rdata,"dr"
+
+.globl _loading_screen_background_png
+_loading_screen_background_png:
+    .incbin "@CHIMERA_LOADING_SCREEN_BACKGROUND_PNG@"
+
+.globl _loading_screen_background_png_end
+_loading_screen_background_png_end:
+    .byte 0

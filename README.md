@@ -61,6 +61,7 @@ These are features that are always on.
 - [Descope fix](#descope-fix)
 - [Extended description fix](#extended-description-fix)
 - [Fast loading](#fast-loading)
+- [Loading screen](#loading-screen)
 - [Fast server listing](#fast-server-listing)
 - [128 MiB map leak fix](#128-mib-map-leak-fix)
 - [Model LOD fix](#model-lod-fix)
@@ -159,6 +160,21 @@ Some mods "fix" this by storing the CRC32 in a cache, but this negates the
 point of it in the first place, as now you can join servers with mismatched
 CRC32s. Chimera truly fixes it by CRC32ing the map when you load the map, not
 the game.
+
+#### Loading screen
+Chimera replaces the loading screen with an animated one similar to the one
+from the original Xbox version of the game. It also loads maps on a separate
+thread while the loading screen is being drawn, which keeps Windows from
+thinking the game froze while a big map loads.
+
+This is only available on Halo Custom Edition, and it is skipped when
+`chimera_block_loading_screen` is on. Note that `optimal_defaults` in
+chimera.ini turns that command on. To turn this feature off entirely, set
+`loading_screen=0` under `[halo]` in chimera.ini and restart the game.
+
+The loading screen is based on the one from
+[Balltze](https://github.com/Kavawuvi/balltze), and the shader is based on a
+[shader by SnowyMouse](https://gist.github.com/SnowyMouse/eb7558d2e036e4becbc764501d99a703).
 
 #### Fast server listing
 The game takes forever to query the master server. Chimera speeds it up.
@@ -466,6 +482,7 @@ the chimera folder created by Chimera.
 - [Spectate previous](#spectate-previous)
 - [Spectate team only](#spectate-team-only)
 - [Teleport](#teleport)
+- [Test loading screen](#test-loading-screen)
 - [Throttle FPS](#throttle-fps)
 - [TPS](#tps)
 - [Uncap cinematic](#uncap-cinematic)
@@ -816,6 +833,11 @@ Teleport you or, if you're hosting a server, someone else to the given X/Y/Z
 coordinates or player.
 
 **Usage:** `chimera_teleport [#] <<#> | <x> <y> <z>>`
+
+#### Test loading screen
+Play the loading screen animation for a few seconds without loading a map.
+
+**Usage:** `chimera_test_loading_screen`
 
 #### Throttle FPS
 Throttle Halo's frame rate. Set to 0 to disable.

@@ -104,6 +104,7 @@
 #include "fix/gametype_indicator_memes.hpp"
 #include "fix/effect_shader_fix.hpp"
 #include "fix/index_buffer_fix.hpp"
+#include "loading_screen/loading_screen.hpp"
 
 namespace Chimera {
     static Chimera *chimera;
@@ -174,6 +175,9 @@ namespace Chimera {
 
                 // For renderer memes
                 set_up_rasterizer();
+
+                // Animated loading screen, and load maps on another thread to make it possible. This has to be done before Halo creates the Direct3D device.
+                set_up_loading_screen();
 
                 // Well it was going to happen eventually.
                 set_up_shader_transparent_generic();

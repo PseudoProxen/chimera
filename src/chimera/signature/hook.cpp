@@ -89,6 +89,18 @@ namespace Chimera {
                     std::terminate();
                 }
 
+                // xor <8-bit register>, <8-bit register> (e.g. xor bl, bl)
+                case 0x32: {
+                    auto op1 = *reinterpret_cast<const std::uint8_t *>(at + 1);
+                    if(op1 >= 0xC0) {
+                        offsets.push_back(at - at_start);
+                        bytes.insert(bytes.end(), at, at + 2);
+                        at += 2;
+                        break;
+                    }
+                    std::terminate();
+                }
+
                 // oxr <value>
                 case 0x33: {
                     auto op1 = *reinterpret_cast<const std::uint8_t *>(at + 1);

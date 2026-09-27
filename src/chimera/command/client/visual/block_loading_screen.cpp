@@ -5,6 +5,7 @@
 #include "../../../signature/signature.hpp"
 #include "../../../chimera.hpp"
 #include "../../../output/output.hpp"
+#include "../../../loading_screen/loading_screen.hpp"
 
 namespace Chimera {
     bool block_loading_screen_command(int argc, const char **argv) {
@@ -29,6 +30,9 @@ namespace Chimera {
                     loading_screen_join_sig.rollback();
                 }
                 enabled = new_enabled;
+
+                // Also tell the custom loading screen
+                set_loading_screen_blocked(enabled);
             }
         }
 

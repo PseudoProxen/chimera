@@ -186,6 +186,7 @@ namespace Chimera {
         ADD_COMMAND("chimera_block_damage", "chimera_category_debug", "core", block_damage_command, false, 0, 1);
         ADD_COMMAND("chimera_show_coordinates", "chimera_category_debug", "client", show_coordinates_command, true, 0, 1);
         ADD_COMMAND("chimera_show_fps", "chimera_category_debug", "client", show_fps_command, true, 0, 1);
+        ADD_COMMAND("chimera_test_loading_screen", "chimera_category_debug", "client_threaded_loading_screen", test_loading_screen_command, false, 0, 0);
         ADD_COMMAND("chimera_tps", "chimera_category_debug", "core", tps_command, false, 0, 1);
         ADD_COMMAND("chimera_teleport", "chimera_category_debug", "core", teleport_command, false, 1, 4);
         ADD_COMMAND("chimera_script_command_dump", "chimera_category_debug", "core", script_command_dump_command, false, 0, 0);

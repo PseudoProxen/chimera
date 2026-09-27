@@ -230,6 +230,8 @@ add_library(chimera STATIC
     src/chimera/halo_data/structure_bsp.cpp
     src/chimera/halo_data/tag.cpp
     src/chimera/halo_data/tag_class.cpp
+    src/chimera/loading_screen/loading_screen.cpp
+    src/chimera/loading_screen/loading_screen.S
     src/chimera/localization/localization.cpp
     src/chimera/lua/lua_callback.cpp
     src/chimera/lua/lua_filesystem.cpp
@@ -263,6 +265,7 @@ add_library(chimera STATIC
     src/chimera/version.rc
     ${COMMAND_FILES}
 
+    ${CMAKE_CURRENT_BINARY_DIR}/loading_screen_background.S
     ${CMAKE_CURRENT_BINARY_DIR}/localization_strings.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/color_codes.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/vertex_shaders.cpp
@@ -273,6 +276,16 @@ add_library(chimera STATIC
     ${CMAKE_CURRENT_BINARY_DIR}/map_hacks_config.cpp
 )
 add_dependencies(chimera chimera-version local_curl local_zstd)
+
+# Embed the loading screen background. The image is pulled in with .incbin, which needs the full path to it.
+set(CHIMERA_LOADING_SCREEN_BACKGROUND_PNG "${CMAKE_CURRENT_SOURCE_DIR}/src/chimera/loading_screen/loading_screen_background.png")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/chimera/loading_screen/loading_screen_background.S.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/loading_screen_background.S"
+    @ONLY
+)
+set_property(SOURCE "${CMAKE_CURRENT_BINARY_DIR}/loading_screen_background.S"
+             APPEND PROPERTY OBJECT_DEPENDS "${CHIMERA_LOADING_SCREEN_BACKGROUND_PNG}")
 
 # Set how we'll generate localization_string
 file(GLOB CHIMERA_LOCALIZATION_DEPS "${CMAKE_CURRENT_SOURCE_DIR}/src/chimera/localization/language/*")
@@ -316,7 +329,7 @@ target_include_directories(chimera
 )
 
 # Set the name
-target_link_libraries(chimera ${D3DCOMPILER_LIBRARY} shlwapi blake3 map_downloader lua ${LOCAL_CURL_LIBRARIES} local_zstd)
+target_link_libraries(chimera ${D3DCOMPILER_LIBRARY} shlwapi gdiplus ole32 blake3 map_downloader lua ${LOCAL_CURL_LIBRARIES} local_zstd)
 
 # This one isn't worth fixing
 set_source_files_properties(src/chimera/signature/hac/codefinder.cpp PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast")
