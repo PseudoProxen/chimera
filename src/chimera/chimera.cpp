@@ -57,6 +57,8 @@
 #include "fix/force_crash.hpp"
 #include "fix/leak_descriptors.hpp"
 #include "fix/timer_offset.hpp"
+#include "fix/timer_resolution.hpp"
+#include "fix/server_main_loop_timer.hpp"
 #include "fix/sane_defaults.hpp"
 #include "fix/vehicle_team_desync.hpp"
 #include "fix/weather_fix.hpp"
@@ -151,6 +153,9 @@ namespace Chimera {
 
             // ...why Gearbox?
             set_up_timer_offset_fix();
+
+            // Sleep() and timers should not be stuck on the 15.6 ms system clock, or throttled in the background
+            set_up_timer_resolution_fix();
 
             // Fix this
             set_up_fix_leaking_descriptors();
@@ -364,6 +369,9 @@ namespace Chimera {
             }
             else {
                 enable_output(true);
+
+                // Wait for the next frame on a timer instead of sleeping and spinning
+                set_up_server_main_loop_timer();
             }
 
             // Make it so number one

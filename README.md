@@ -84,6 +84,8 @@ These are features that are always on.
 - [Name fade fix](#name-fade-fix)
 - [Scoreboard fade fix](#scoreboard-fade-fix)
 - [Timer offset fix](#timer-offset-fix)
+- [Timer resolution fix](#timer-resolution-fix)
+- [Server main loop timer](#server-main-loop-timer)
 - [Sane default Halo settings](#sane-default-halo-settings)
 - [Removed update check](#removed-update-check)
 - [Removed Watson](#removed-watson)
@@ -263,6 +265,29 @@ Scoreboard now fades in/out correctly at high frame rates.
 #### Timer offset fix
 Halo PC has a bug where equipment spawns `floor(8.1n)` ticks (where n = the
 netgame equipment index). This bug is fixed.
+
+#### Timer resolution fix
+By default, Windows only wakes sleeping programs every 15.6 ms, so a frame rate
+limit like `chimera_throttle_fps` can overshoot its wait. Chimera asks for a
+1 ms timer resolution and stops Windows from throttling Halo when it is in the
+background (e.g. when tabbed out or hosting a server nobody is looking at).
+
+Lua timers made with `set_timer` also no longer fire back to back for every
+period that was missed after a long stall, such as a map loading. They run once
+and carry on from there.
+
+#### Server main loop timer
+A dedicated server waits for the next frame by sleeping for 10 ms at a time
+until the last 12 ms of the frame and then spinning in a loop until the frame is
+over, which keeps a CPU core busy. Chimera has it wait on a periodic high
+resolution timer instead. This uses less CPU, and if a frame is late (for
+example, while loading a map), the missed wakes are combined into one instead of
+making the server run a burst of frames to catch up. Use `chimera_timer_stats`
+to see how on time the server is waking up.
+
+This is based on the main loop timer from SAPP. It only applies to dedicated
+servers, and can be turned off by setting `server_main_loop_timer=0` under
+`[halo]` in chimera.ini.
 
 #### Sane default Halo settings
 Halo's default video (not including resolution) and audio settings are set to
@@ -484,6 +509,7 @@ the chimera folder created by Chimera.
 - [Teleport](#teleport)
 - [Test loading screen](#test-loading-screen)
 - [Throttle FPS](#throttle-fps)
+- [Timer stats](#timer-stats)
 - [TPS](#tps)
 - [Uncap cinematic](#uncap-cinematic)
 - [Unblock all extra weapons](#unblock-all-extra-weapons)
@@ -843,6 +869,14 @@ Play the loading screen animation for a few seconds without loading a map.
 Throttle Halo's frame rate. Set to 0 to disable.
 
 **Usage:** `chimera_throttle_fps [FPS]`
+
+#### Timer stats
+Show how on time the dedicated server main loop timer is waking up (average,
+shortest and longest time between frames, and how many were late), then start
+counting again. Only available on a dedicated server where the main loop timer
+is active.
+
+**Usage:** `chimera_timer_stats`
 
 #### TPS
 Set the game's tick rate. This will not work outside of client hosted games.

@@ -160,12 +160,15 @@ add_library(chimera STATIC
     src/chimera/fix/sane_defaults.S
     src/chimera/fix/scoreboard_fade_fix.cpp
     src/chimera/fix/scoreboard_fade_fix.S
+    src/chimera/fix/server_main_loop_timer.cpp
+    src/chimera/fix/server_main_loop_timer.S
     src/chimera/fix/screen_effect_fix.cpp
     src/chimera/fix/screen_effect_fix.S
     src/chimera/fix/shader_environment_fix.cpp
     src/chimera/fix/shader_environment_fix.S
     src/chimera/fix/sun_fix.cpp
     src/chimera/fix/timer_offset.cpp
+    src/chimera/fix/timer_resolution.cpp
     src/chimera/fix/uncompressed_sound_fix.cpp
     src/chimera/fix/vehicle_team_desync.cpp
     src/chimera/fix/vehicle_team_desync.S
@@ -329,7 +332,7 @@ target_include_directories(chimera
 )
 
 # Set the name
-target_link_libraries(chimera ${D3DCOMPILER_LIBRARY} shlwapi gdiplus ole32 blake3 map_downloader lua ${LOCAL_CURL_LIBRARIES} local_zstd)
+target_link_libraries(chimera ${D3DCOMPILER_LIBRARY} shlwapi winmm gdiplus ole32 blake3 map_downloader lua ${LOCAL_CURL_LIBRARIES} local_zstd)
 
 # This one isn't worth fixing
 set_source_files_properties(src/chimera/signature/hac/codefinder.cpp PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast")

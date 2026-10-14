@@ -18,6 +18,9 @@
 namespace Chimera {
     static LARGE_INTEGER last_time;
 
+    /** If this many seconds passed between two checks, the game stalled (e.g. loading a map) */
+    static constexpr double TIMER_STALL_THRESHOLD = 0.5;
+
     extern std::vector<std::unique_ptr<LuaScript>> scripts;
     extern void load_map_script() noexcept;
 
@@ -58,6 +61,12 @@ namespace Chimera {
             for(std::size_t t = 0; t < timers.size(); t++) {
                 auto &timer = timers[t];
                 timer.time_passed += r * 1000;
+
+                // After a stall, run the timer once and carry on from now instead of running it back to back for every period that was missed
+                if(r > TIMER_STALL_THRESHOLD && timer.time_passed > timer.interval_ms) {
+                    timer.time_passed = timer.interval_ms;
+                }
+
                 bool deleted = false;
                 while(timer.time_passed >= timer.interval_ms) {
                     deleted = true;
