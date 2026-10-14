@@ -68,6 +68,7 @@
 #include "fix/multitexture_overlay_fix.hpp"
 #include "fix/blue_32bit_color_fix.hpp"
 #include "fix/contrail_fix.hpp"
+#include "fix/countdown_timer_fix.hpp"
 #include "fix/interpolate/interpolate.hpp"
 #include "fix/sun_fix.hpp"
 #include "fix/screen_effect_fix.hpp"
@@ -107,6 +108,7 @@
 #include "fix/effect_shader_fix.hpp"
 #include "fix/index_buffer_fix.hpp"
 #include "loading_screen/loading_screen.hpp"
+#include "fix/fixed_function.hpp"
 
 namespace Chimera {
     static Chimera *chimera;
@@ -215,6 +217,8 @@ namespace Chimera {
                 set_up_multitexture_overlay_fix();
                 set_up_bitmap_formats();
                 set_up_index_buffer_fix();
+                set_up_countdown_timer_fix();
+                set_up_fixed_function_fix();
 
                 // This seemed like a good idea at the time...
                 set_up_water_fix();

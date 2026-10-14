@@ -63,7 +63,16 @@ namespace Chimera {
         IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(decal_multiply2x), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_DECAL_MULTIPLY2X]);
         IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(decal_alpha_blend), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_DECAL_ALPHA_BLEND]);
         IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(decal_alpha_madd), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_DECAL_ALPHA_MULTIPLY_ADD]);
+        IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(transparent_glass_tint), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_TRANSPARENT_GLASS_TINT]);
+        IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(modulate), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_MODULATE]);
+        IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(diffuse), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_DIFFUSE]);
+        IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(texture), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_TEXTURE]);
+        IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(occlusion_test), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_OCCLUSION]);
 
+        if(d3d9_device_caps->PixelShaderVersion >= 0xffff0300) {
+            IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(transparent_chicago), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_TRANSPARENT_CHICAGO]);
+            IDirect3DDevice9_CreatePixelShader(*global_d3d9_device, reinterpret_cast<DWORD *>(transparent_chicago_cube), &chimera_pixel_shaders[CHIMERA_PIXEL_SHADER_TRANSPARENT_CHICAGO_CUBE]);
+        }
     }
 
     void rasterizer_release_pixel_shaders() noexcept {

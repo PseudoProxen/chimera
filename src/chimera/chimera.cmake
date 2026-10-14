@@ -106,6 +106,8 @@ add_library(chimera STATIC
     src/chimera/fix/chicago_fix.S
     src/chimera/fix/contrail_fix.cpp
     src/chimera/fix/contrail_fix.S
+    src/chimera/fix/countdown_timer_fix.cpp
+    src/chimera/fix/countdown_timer_fix.S
     src/chimera/fix/custom_map_lobby_fix.cpp
     src/chimera/fix/death_reset_time.cpp
     src/chimera/fix/decal_fix.cpp
@@ -166,6 +168,7 @@ add_library(chimera STATIC
     src/chimera/fix/screen_effect_fix.S
     src/chimera/fix/shader_environment_fix.cpp
     src/chimera/fix/shader_environment_fix.S
+    src/chimera/fix/fixed_function.cpp
     src/chimera/fix/sun_fix.cpp
     src/chimera/fix/timer_offset.cpp
     src/chimera/fix/timer_resolution.cpp
@@ -256,6 +259,7 @@ add_library(chimera STATIC
     src/chimera/output/output.cpp
     src/chimera/output/output.S
     src/chimera/rasterizer/shader_transparent_generic.cpp
+    src/chimera/rasterizer/shader_transparent_chicago.cpp
     src/chimera/rasterizer/shader_transparent_generic.S
     src/chimera/rasterizer/rasterizer_transparent_geometry.cpp
     src/chimera/rasterizer/rasterizer_environment_fog.cpp
