@@ -228,6 +228,7 @@ chimera_lua_error_invalid_function_argument                                     
 chimera_lua_error_scope_path                                                    invalid path (filesystem functions are scoped to script data directory)
 chimera_lua_error_invalid_object_id                                             invalid object ID
 chimera_lua_error_invalid_callback                                              invalid callback %s given in set_callback.
+chimera_lua_error_invalid_callback_priority                                     invalid callback priority %s given in set_callback (expected before, default, after, or final).
 chimera_lua_error_global_not_found                                              global not found or not implemented
 chimera_lua_error_expected_number                                               expected a number in argument #%d
 chimera_lua_error_expected_number_or_boolean                                    expected a number or boolean in argument #%d

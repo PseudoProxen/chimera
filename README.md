@@ -391,6 +391,13 @@ reload command. Scripts in the map folder is loaded when a map is loaded and
 unloaded when a map is unloaded. Scripts may also be contained inside of map
 files.
 
+`set_callback` takes an optional third argument for when the callback runs
+relative to other scripts' callbacks of the same type: `"before"`, `"default"`
+(if left out), `"after"` or `"final"`. Callbacks with the same priority run in
+the order the scripts were loaded. A `"final"` callback can see what the earlier
+ones did but cannot change the values they pass along (such as the camera in
+`precamera`). For example, `set_callback("precamera", "draw_overlay", "final")`.
+
 ### Ini features
 
 Chimera has a very customizable chimera.ini text file that you can use to

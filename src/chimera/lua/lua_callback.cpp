@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+#include <cstring>
 #include <memory>
 #include "../event/camera.hpp"
 #include "../event/command.hpp"
@@ -252,10 +253,10 @@ namespace Chimera {
     int lua_set_callback(lua_State *state) noexcept {
         int args = lua_gettop(state);
 
-        if(args == 1 || args == 2) {
+        if(args >= 1 && args <= 3) {
             const char *callback_name = luaL_checkstring(state,1);
             const char *function_name = "";
-            if(args == 2) {
+            if(args >= 2) {
                 function_name = luaL_checkstring(state,2);
                 if(function_name == nullptr) {
                     function_name = "";
@@ -263,18 +264,22 @@ namespace Chimera {
             }
             EventPriority priority = EVENT_PRIORITY_DEFAULT;
             if(args == 3) {
-                auto callback_priority = std::string(luaL_checkstring(state,3));
-                if(callback_priority == "before") {
+                // Don't hold a std::string here; luaL_error does not return, so it would never be destroyed
+                const char *callback_priority = luaL_checkstring(state,3);
+                if(std::strcmp(callback_priority, "before") == 0) {
                     priority = EVENT_PRIORITY_BEFORE;
                 }
-                else if(callback_priority == "default") {
+                else if(std::strcmp(callback_priority, "default") == 0) {
                     priority = EVENT_PRIORITY_DEFAULT;
                 }
-                else if(callback_priority == "after") {
+                else if(std::strcmp(callback_priority, "after") == 0) {
                     priority = EVENT_PRIORITY_AFTER;
                 }
-                else if(callback_priority == "final") {
+                else if(std::strcmp(callback_priority, "final") == 0) {
                     priority = EVENT_PRIORITY_FINAL;
+                }
+                else {
+                    return luaL_error(state, localize("chimera_lua_error_invalid_callback_priority"), callback_priority);
                 }
             }
 
@@ -304,7 +309,7 @@ namespace Chimera {
             }
         }
         else {
-            luaL_error(state, localize("chimera_lua_error_wrong_number_of_arguments"));
+            return luaL_error(state, localize("chimera_lua_error_wrong_number_of_arguments"), "set_callback");
         }
         return 0;
     }
