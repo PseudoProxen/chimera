@@ -3,6 +3,7 @@
 #include "../../halo_data/particle.hpp"
 
 #include "particle.hpp"
+#include "../extend_limits.hpp"
 
 namespace Chimera {
     struct InterpolatedParticle {
@@ -10,7 +11,7 @@ namespace Chimera {
         Point3D position;
     };
 
-    #define PARTICLE_BUFFER_SIZE 1024
+    #define PARTICLE_BUFFER_SIZE PARTICLE_LIMIT
     static InterpolatedParticle particle_buffers[2][PARTICLE_BUFFER_SIZE] = {};
 
     // These are pointers to each buffer. These swap every tick.

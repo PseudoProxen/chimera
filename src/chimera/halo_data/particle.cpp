@@ -7,7 +7,8 @@
 
 namespace Chimera {
     ParticleTable &ParticleTable::get_particle_table() noexcept {
-        static auto *particle_table = **reinterpret_cast<ParticleTable ***>(get_chimera().get_signature("particle_table_sig").data() + 2);
-        return *particle_table;
+        // Don't hold onto the table itself since Chimera moves it after startup.
+        static auto **particle_table = *reinterpret_cast<ParticleTable ***>(get_chimera().get_signature("particle_table_sig").data() + 2);
+        return **particle_table;
     }
 }

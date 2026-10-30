@@ -660,6 +660,9 @@ namespace Chimera {
     void initial_tick() {
         remove_preframe_event(initial_tick);
         if(chimera->feature_present("client")) {
+            // Halo has allocated its particle table by now, so we can replace it
+            set_up_extend_particle_limit();
+
             // Set up the text hook?
             setup_text_hook();
 

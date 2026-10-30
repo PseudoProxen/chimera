@@ -13,6 +13,8 @@
 #include "../../../fix/extend_limits.hpp"
 #include "../../../rasterizer/shader_transparent_generic.hpp"
 
+extern "C" std::uint32_t extend_limits_poly_limit;
+
 namespace Chimera {
     static void show_budget() noexcept;
     static bool use_stock_limits = false;
@@ -89,7 +91,7 @@ namespace Chimera {
         std::uint32_t max_bsp_polies;
         if(*reinterpret_cast<std::uint8_t *>(bsp_polies_addr + 0x6) == 0x90) {
             bsp_polies = **reinterpret_cast<std::uint32_t **>(bsp_polies_addr + 2);
-             max_bsp_polies = use_stock_limits ? 16384 : BSP_POLY_LIMIT;
+             max_bsp_polies = use_stock_limits ? 16384 : extend_limits_poly_limit;
         }
         else {
             bsp_polies = **reinterpret_cast<std::uint32_t **>(bsp_polies_addr + 3);

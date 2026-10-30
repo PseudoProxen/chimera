@@ -775,7 +775,8 @@ List and query all recent servers.
 #### Budget
 
 Show the different budgets in Halo, including object limit and BSP polygon
-limit.
+limit. Chimera raises some of these, such as the particle limit (1024 to 4096)
+and the visible BSP polygon limit (16384 to 65534).
 
 **Usage:** `chimera_budget [true/false]`
 

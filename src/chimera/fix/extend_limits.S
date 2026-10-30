@@ -30,3 +30,12 @@ _extend_limits_cmp_3:
     cmp eax, [_extend_limits_poly_limit]
     pop eax
     jmp dword ptr [_extend_limits_count_3]
+
+.globl _extend_limits_cmp_4
+_extend_limits_cmp_4:
+    push eax
+    mov eax, [_extend_limits_polies_count]
+    mov eax, [eax]
+    cmp eax, [_extend_limits_poly_limit]
+    pop eax
+    jmp dword ptr [_extend_limits_count_4]
