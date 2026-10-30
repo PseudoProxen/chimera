@@ -144,6 +144,7 @@ chimera_fix_lens_flare_scaling_command_help                                     
 chimera_fix_motion_sensor_command_help                                          Fix motion sensor behavior on high frame rates.
 
 chimera_fov_command_help                                                        Set field of view. Use \"auto\" for automatic FOV or suffix FOV with \"v\" to lock to a vertical FOV.
+chimera_near_clip_command_help                                                  Set the near clip distance (0.0625 to 0.25). Higher values reduce Z-fighting but may clip nearby geometry.
 chimera_fov_vehicle_command_help                                                Set field of view for vehicles. Use \"auto\" for automatic FOV or suffix FOV with \"v\" to lock to a vertical FOV.
 chimera_fov_cinematic_command_help                                              Set field of view for cinematics. Use \"auto\" for automatic FOV or suffix FOV with \"v\" to lock to a vertical FOV.
 chimera_fov_error_invalid_fov_given                                             Invalid FOV given. Expected \"auto\", <FOV>, <FOV>v, or \"off\"

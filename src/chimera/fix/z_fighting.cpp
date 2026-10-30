@@ -27,6 +27,13 @@ namespace Chimera {
     static const float DEFAULT_Z_MIN = 0.0312585f;
     static const float DEFAULT_Z_MIN_FP = 0.01171875f;
 
+    // The near clip the game uses for everything but first person and cinematics.
+    static const float DEFAULT_NEAR_CLIP = 0.0625f;
+
+    // How far the near clip was moved from the default. Depth is 1 - near / z, so a surface's depth error and any
+    // offset needed to get past it both grow with the near clip. Everything we offset by has to be scaled by this.
+    static float near_clip_scale = 1.0f;
+
     //Paranoid about ringworld overwriting this sig at some point.
     static std::byte *cinematic_screen_effect_ptr = nullptr;
 
@@ -104,12 +111,12 @@ namespace Chimera {
                                 return;
                             }
                         }
-                        rasterizer_set_frustum_z(z_near + 0.00005, *z_far);
+                        rasterizer_set_frustum_z(z_near + 0.00005 * near_clip_scale, *z_far);
                         reset_frustum = true;
                     }
                     // Because refined doesn't fix shader flags that bungo left unchecked.
                     else if(!is_decal) {
-                        rasterizer_set_frustum_z(0.031275, *z_far);
+                        rasterizer_set_frustum_z(0.031275 * near_clip_scale, *z_far);
                         reset_frustum = true;
                     }
                 }
@@ -135,7 +142,7 @@ namespace Chimera {
                                     break;
 
                                 case OBJECT_TYPE_DEVICE_MACHINE:
-                                    rasterizer_set_frustum_z(z_near + 0.00005, *z_far);
+                                    rasterizer_set_frustum_z(z_near + 0.00005 * near_clip_scale, *z_far);
                                     reset_frustum = true;
                                     break;
 
@@ -179,8 +186,8 @@ namespace Chimera {
         auto data = camera_data();
         float scale = magnitude3d(data.position);
 
-        z_near = DEFAULT_Z_MIN + 0.0000000825f * scale;
-        z_near_veh = DEFAULT_Z_MIN + 0.000000024f * scale;
+        z_near = (DEFAULT_Z_MIN + 0.0000000825f * scale) * near_clip_scale;
+        z_near_veh = (DEFAULT_Z_MIN + 0.000000024f * scale) * near_clip_scale;
         z_near_fp = DEFAULT_Z_MIN_FP + 0.00000006f * scale;
     }
 
@@ -218,5 +225,28 @@ namespace Chimera {
         // Reduces other decals (ie blood splatters, grenade explosions marks etc) with a low slope z-fighting
         // with bsp geo. Game sets this to -2 on ATI/AMD cards only by default.
         overwrite(default_decal_slope, -2.0f);
+    }
+
+    float set_near_clip(float near_clip) noexcept {
+        static float current_near_clip = DEFAULT_NEAR_CLIP;
+
+        auto *transparent_decal_zbias = *reinterpret_cast<float **>(get_chimera().get_signature("transparent_decal_zbias_sig").data() + 0xE);
+        auto *decal_zbias = transparent_decal_zbias - 1;
+
+        // Keep the game's values so that going back to the default gives us exactly what we started with.
+        static const float default_transparent_decal_zbias = *transparent_decal_zbias;
+        static const float default_decal_zbias = *decal_zbias;
+
+        current_near_clip = near_clip;
+        near_clip_scale = near_clip / DEFAULT_NEAR_CLIP;
+
+        // Unlike the slope, the constant bias does not scale with the depth on its own.
+        overwrite(transparent_decal_zbias, default_transparent_decal_zbias * near_clip_scale);
+        overwrite(decal_zbias, default_decal_zbias * near_clip_scale);
+
+        // The game loads the near clip from a constant it shares with unrelated code, so repoint the load.
+        overwrite(get_chimera().get_signature("near_clip_sig").data() + 8, &current_near_clip);
+
+        return current_near_clip;
     }
 }

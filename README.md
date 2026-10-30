@@ -571,6 +571,7 @@ the chimera folder created by Chimera.
 - [Lock FP model FoV](#lock-fp-model-fov)
 - [Model detail](#model-detail)
 - [Mouse sensitivity](#mouse-sensitivity)
+- [Near clip](#near-clip)
 - [Player info](#player-info)
 - [Player list](#player-list)
 - [Safe zones](#safe-zones)
@@ -871,6 +872,17 @@ which will always scale by 480p regardless of this to prevent the afformentioned
 "4K headless chief" glitch.
 
 **Usage:** `chimera_model_detail [true/false]`
+
+#### Near clip
+
+Set the near clip distance, from 0.0625 (the game's default) to 0.25. Raising it
+reduces Z-fighting between all surfaces, especially at long range, because depth
+precision is proportional to this value. Decal offsets are scaled to match. Very
+high values may cut into geometry right next to the camera. First person models
+use their own near clip and are not affected, and neither are cinematics that set
+their own.
+
+**Usage:** `chimera_near_clip [distance]`
 
 #### Mouse sensitivity
 

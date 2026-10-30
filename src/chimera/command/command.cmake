@@ -72,6 +72,7 @@ set(COMMAND_FILES
     ${COMMAND_DIR}/client/visual/interpolate.cpp
     ${COMMAND_DIR}/client/visual/meme_zone.cpp
     ${COMMAND_DIR}/client/visual/model_detail.cpp
+    ${COMMAND_DIR}/client/visual/near_clip.cpp
     ${COMMAND_DIR}/client/visual/safe_zone.cpp
     ${COMMAND_DIR}/client/visual/simple_score_screen.cpp
     ${COMMAND_DIR}/client/visual/shrink_empty_weapons.cpp
