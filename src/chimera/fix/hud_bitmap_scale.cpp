@@ -126,33 +126,40 @@ namespace Chimera {
             }
             update_safe_zones(config_safe_zone_x, config_safe_zone_y);
         }
- 
+
         half_viewport_width = viewport_width / 2.0f;
     }
 
     extern "C" void check_half_scale_bitmap_flag(BitmapData *bitmap, bool highres_scale) noexcept {
-        int scale = 1;
+        scaled_bound_w = bitmap->width;
+        scaled_bound_h = bitmap->height;
+        scaled_reg_pt_w = bitmap->registration_point.x;
+        scaled_reg_pt_h = bitmap->registration_point.y;
 
         // This should always be valid, but it might not be.
         auto *bitmap_group = get_bitmap_tag(bitmap->tag_id);
-        if(bitmap_group) {
-            // Is 0.5 scale flag set?
-            if(TEST_FLAG(bitmap_group->flags, BITMAP_FLAGS_HALF_HUD_SCALE_BIT)) {
-                scale = 2;
-            }
-
-            // Is "force hud use highres scale" set in the bitmap tag AND "use highres scale" not set in the interface tag?
-            // If so, make it scale by another half.
-            if(TEST_FLAG(bitmap_group->flags, BITMAP_FLAGS_FORCE_HUD_USE_HIGHRES_SCALE_BIT) && !highres_scale) {
-                scale *= 2;
-            }
+        if(!bitmap_group) {
+            return;
         }
 
-        // Scale it.
-        scaled_bound_w = bitmap->width / scale;
-        scaled_bound_h = bitmap->height / scale;
-        scaled_reg_pt_w = bitmap->registration_point.x / scale;
-        scaled_reg_pt_h = bitmap->registration_point.y / scale;
+        // Negate this
+        if(highres_scale && TEST_FLAG(bitmap_group->flags, BITMAP_FLAGS_DISABLE_HIGHRES_SCALE_BIT)) {
+            scaled_bound_w <<= 1;
+            scaled_bound_h <<= 1;
+            scaled_reg_pt_w <<= 1;
+            scaled_reg_pt_h <<= 1;
+        }
+
+        // Is 0.25 scale flag set?
+        int scale = TEST_FLAG(bitmap_group->flags, BITMAP_FLAGS_QUARTER_HUD_SCALE_BIT) << 1;
+
+        // Is 0.5 scale flag set?
+        scale += TEST_FLAG(bitmap_group->flags, BITMAP_FLAGS_HALF_HUD_SCALE_BIT);
+
+        scaled_bound_w >>= scale;
+        scaled_bound_h >>= scale;
+        scaled_reg_pt_w >>= scale;
+        scaled_reg_pt_h >>= scale;
     }
 
     void is_using_highres_scale() noexcept {

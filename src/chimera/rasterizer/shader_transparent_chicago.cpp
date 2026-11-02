@@ -85,7 +85,7 @@ namespace Chimera {
 
     void shader_transparent_chicago_create(ShaderTransparentChicago *shader_transparent_chicago) noexcept {
         // maps
-        if (shader_transparent_chicago->chicago.maps.count>0) {
+        if (shader_transparent_chicago->chicago.maps.count > 0) {
             float func_config[72];
 
             float* stage_color[3];
@@ -106,11 +106,11 @@ namespace Chimera {
             memcpy(stage_color[2], &stage_color_settings[SHADER_TRANSPARENT_CHICAGO_MAP_FUNCTION_CURRENT], sizeof(StageColorSettings));
             memcpy(stage_alpha[2], &stage_alpha_settings[SHADER_TRANSPARENT_CHICAGO_MAP_FUNCTION_CURRENT], sizeof(StageAlphaSettings));
 
-            float alpha_replicate[4] ={0.0f, 0.0f, 0.0f, 0.0f};
+            float alpha_replicate[4] = {0.0f, 0.0f, 0.0f, 0.0f};
             float fog_config[4];
 
             // Set the first stage
-            for (std::uint32_t map_index= 0; map_index < shader_transparent_chicago->chicago.maps.count; map_index++)
+            for (std::uint32_t map_index = 0; map_index < shader_transparent_chicago->chicago.maps.count; map_index++)
             {
                 ShaderTransparentChicagoMap *map= shader_transparent_chicago_get_map(shader_transparent_chicago, map_index);
 
@@ -164,7 +164,7 @@ namespace Chimera {
 
     void shader_transparent_chicago_extended_create(ShaderTransparentChicagoExtended *shader_transparent_chicago) noexcept {
         // maps
-        if (shader_transparent_chicago->chicago_extended.maps.count>0) {
+        if (shader_transparent_chicago->chicago_extended.maps.count > 0) {
             float func_config[72];
 
             float* stage_color[3];
@@ -185,11 +185,11 @@ namespace Chimera {
             memcpy(stage_color[2], &stage_color_settings[SHADER_TRANSPARENT_CHICAGO_MAP_FUNCTION_CURRENT], sizeof(StageColorSettings));
             memcpy(stage_alpha[2], &stage_alpha_settings[SHADER_TRANSPARENT_CHICAGO_MAP_FUNCTION_CURRENT], sizeof(StageAlphaSettings));
 
-            float alpha_replicate[4] ={0.0f, 0.0f, 0.0f, 0.0f};
+            float alpha_replicate[4] = {0.0f, 0.0f, 0.0f, 0.0f};
             float fog_config[4];
 
             // Set the first stage
-            for (std::uint32_t map_index= 0; map_index < shader_transparent_chicago->chicago_extended.maps.count; map_index++)
+            for (std::uint32_t map_index = 0; map_index < shader_transparent_chicago->chicago_extended.maps.count; map_index++)
             {
                 ShaderTransparentChicagoMap *map= shader_transparent_chicago_extended_get_map(shader_transparent_chicago, map_index);
 
@@ -250,6 +250,12 @@ namespace Chimera {
         ShaderTransparentChicago *shader_data = shader_transparent_chicago_get(group->shader);
         std::uint16_t bitmap_index = group->shader_permutation_index;
 
+        // Urgh
+        ShaderTransparentChicagoMap *map= shader_transparent_chicago_get_map(shader_data, 0);
+        if( (!map || !map->map.path) ){
+            return true;
+        }
+
         for(std::uint16_t layer_index = 0; layer_index < shader_data->chicago.extra_layers.count; layer_index++) {
             TransparentGeometryGroup group_layer;
             memcpy(&group_layer, group, sizeof(TransparentGeometryGroup));
@@ -264,7 +270,6 @@ namespace Chimera {
         IDirect3DVertexShader9 *vertex_shader = rasterizer_get_vertex_shader_for_permutation(vertex_shader_permutation, vertex_type);
         IDirect3DDevice9_SetVertexShader(*global_d3d9_device, vertex_shader);
         IDirect3DDevice9_SetVertexDeclaration(*global_d3d9_device, rasterizer_get_vertex_declaration(vertex_type));
-        IDirect3DDevice9_SetPixelShader(*global_d3d9_device, NULL);
         IDirect3DDevice9_SetTextureStageState(*global_d3d9_device, 0, D3DTSS_COLOROP, D3DTOP_DISABLE);
         IDirect3DDevice9_SetTextureStageState(*global_d3d9_device, 0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 
@@ -293,7 +298,6 @@ namespace Chimera {
 
                 bitmap_index = numeric_counter % base;
             }
-
         }
 
         // Maps
@@ -396,13 +400,6 @@ namespace Chimera {
             }
             IDirect3DDevice9_SetVertexShaderConstantF(*global_d3d9_device, 13, vsh_constants_texanim, 8);
         }
-        else {
-            // Just draw with no pixel shader to handle bullshit custom tags with no maps...
-            rasterizer_transparent_geometry_group_draw_vertices(group, FALSE);
-            IDirect3DDevice9_SetRenderState(*global_d3d9_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-
-            return true;
-        }
 
         shader_transparent_chicago_create(shader_data);
 
@@ -464,6 +461,12 @@ namespace Chimera {
         ShaderTransparentChicagoExtended *shader_data = shader_transparent_chicago_extended_get(group->shader);
         std::uint16_t bitmap_index = group->shader_permutation_index;
 
+        // Urgh
+        ShaderTransparentChicagoMap *map= shader_transparent_chicago_extended_get_map(shader_data, 0);
+        if( (!map ||!map->map.path) ){
+            return true;
+        }
+
         for(std::uint16_t layer_index = 0; layer_index < shader_data->chicago_extended.extra_layers.count; layer_index++) {
             TransparentGeometryGroup group_layer;
             memcpy(&group_layer, group, sizeof(TransparentGeometryGroup));
@@ -478,7 +481,6 @@ namespace Chimera {
         IDirect3DVertexShader9 *vertex_shader = rasterizer_get_vertex_shader_for_permutation(vertex_shader_permutation, vertex_type);
         IDirect3DDevice9_SetVertexShader(*global_d3d9_device, vertex_shader);
         IDirect3DDevice9_SetVertexDeclaration(*global_d3d9_device, rasterizer_get_vertex_declaration(vertex_type));
-        IDirect3DDevice9_SetPixelShader(*global_d3d9_device, NULL);
         IDirect3DDevice9_SetTextureStageState(*global_d3d9_device, 0, D3DTSS_COLOROP, D3DTOP_DISABLE);
         IDirect3DDevice9_SetTextureStageState(*global_d3d9_device, 0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 
@@ -507,7 +509,6 @@ namespace Chimera {
 
                 bitmap_index = numeric_counter % base;
             }
-
         }
 
         // Maps
@@ -609,14 +610,6 @@ namespace Chimera {
                 }
             }
             IDirect3DDevice9_SetVertexShaderConstantF(*global_d3d9_device, 13, vsh_constants_texanim, 8);
-        }
-
-        else {
-            // Just draw with no pixel shader to handle bullshit custom tags with no maps...
-            rasterizer_transparent_geometry_group_draw_vertices(group, FALSE);
-            IDirect3DDevice9_SetRenderState(*global_d3d9_device, D3DRS_BLENDOP, D3DBLENDOP_ADD);
-
-            return true;
         }
 
         shader_transparent_chicago_extended_create(shader_data);

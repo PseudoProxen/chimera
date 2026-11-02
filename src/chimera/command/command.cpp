@@ -204,6 +204,7 @@ namespace Chimera {
         ADD_COMMAND("chimera_debug_invert_detail_after_reflection", "chimera_category_debug", "client_custom_edition", map_config_detail_after_reflection, false, 0, 0);
         ADD_COMMAND("chimera_debug_old_widescreen_fix", "chimera_category_debug", "client_custom_edition", map_config_old_widescreen_fix, false, 0, 0);
         ADD_COMMAND("chimera_debug_block_multitexture_overlays", "chimera_category_debug", "client_custom_edition", map_config_block_multitexture_overlays, false, 0, 0);
+        ADD_COMMAND("chimera_debug_ignore_particles_secondary_map", "chimera_category_debug", "client_custom_edition", map_config_ignore_particles_secondary_map, false, 0, 0);
 
         // Enhancements
         this->p_commands.emplace_back("chimera_block_all_bullshit", localize("chimera_category_enhancement"), "client", localize("chimera_block_all_bullshit_help"), Chimera::block_all_bullshit_command, false, 0, 0);
